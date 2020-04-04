@@ -4,7 +4,6 @@ from django.contrib import admin
 
 from survey.actions import make_published
 from survey.exporter.csv import Survey2Csv
-from survey.exporter.tex import Survey2Tex
 from survey.models import Answer, Category, Question, Response, Survey
 
 
@@ -24,7 +23,7 @@ class SurveyAdmin(admin.ModelAdmin):
     exclude = ['display_by_question']
     list_filter = ("is_published", "need_logged_user")
     inlines = [CategoryInline, QuestionInline]
-    actions = [make_published, Survey2Csv.export_as_csv, Survey2Tex.export_as_tex]
+    actions = [make_published, Survey2Csv.export_as_csv]
 
 
 class AnswerBaseInline(admin.StackedInline):
