@@ -26,8 +26,6 @@ class SurveyDetail(LoginRequiredMixin, View):
                 template_name = "survey.html"
             else:
                 template_name = "one_page_survey.html"
-        if survey.need_logged_user and not request.user.is_authenticated:
-            return redirect("%s?next=%s" % (settings.LOGIN_URL, request.path))
         categories = Category.objects.filter(survey=survey).order_by("order")
         form = ResponseForm(survey=survey, user=request.user, step=step)
         asset_context = {
