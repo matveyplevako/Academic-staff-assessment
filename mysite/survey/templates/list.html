@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block body %}
+    <div id="intro">
+        <h2 class="row container">Survey list</h2>
+        {% if surveys.all %}
+            <div class="list-group">
+                {% for survey in surveys %}
+                    <a class="list-group-item"
+                       href="{{ survey.get_absolute_url }}">
+                        <h4 class="list-group-item-heading">{{ survey.name }}</h4>
+                        <p class="list-group-item-text">{{ survey.description|truncatewords_html:10|linebreaks }}</p>
+                    </a>
+                {% endfor %}
+            </div>
+        {% else %}
+            <h4 class="row container">There is no active surveys for you now. Please come back later</h4>
+        {% endif %}
+    </div>
+{% endblock %}
