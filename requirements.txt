@@ -4,3 +4,4 @@ django-heroku
 psycopg2
 gunicorn
 django-bootstrap-form
+pyyaml
