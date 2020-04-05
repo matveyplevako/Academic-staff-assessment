@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.contrib import admin
+from django.shortcuts import get_object_or_404
 
 from survey.actions import make_published
 from survey.exporter.csv import Survey2Csv
@@ -11,6 +12,13 @@ class QuestionInline(admin.TabularInline):
     model = Question
     ordering = ("order", "category")
     extra = 1
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == "category":
+            survey_id = request.resolver_match.kwargs['object_id']
+            survey = get_object_or_404(Survey, is_published=True, id=survey_id)
+            kwargs["queryset"] = Category.objects.filter(survey=survey)
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 
 class CategoryInline(admin.TabularInline):
@@ -24,6 +32,7 @@ class SurveyAdmin(admin.ModelAdmin):
     list_filter = ("is_published", "need_logged_user")
     inlines = [CategoryInline, QuestionInline]
     actions = [make_published, Survey2Csv.export_as_csv]
+
 
 
 class AnswerBaseInline(admin.StackedInline):

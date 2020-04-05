@@ -11,6 +11,7 @@ class IndexView(LoginRequiredMixin, TemplateView):
     template_name = "list.html"
 
     def get_context_data(self, **kwargs):
+        # TODO: select course for user to participate in survey
         context = super(IndexView, self).get_context_data(**kwargs)
         surveys = Survey.objects.filter(
             is_published=True, expire_date__gte=date.today(), publish_date__lte=date.today()
