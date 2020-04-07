@@ -14,7 +14,7 @@ class QuestionInline(admin.TabularInline):
     extra = 1
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
-        if db_field.name == "category":
+        if db_field.name == "category" and 'object_id' in request.resolver_match.kwargs:
             survey_id = request.resolver_match.kwargs['object_id']
             survey = get_object_or_404(Survey, is_published=True, id=survey_id)
             kwargs["queryset"] = Category.objects.filter(survey=survey)
@@ -32,7 +32,6 @@ class SurveyAdmin(admin.ModelAdmin):
     list_filter = ("is_published", "need_logged_user")
     inlines = [CategoryInline, QuestionInline]
     actions = [make_published, Survey2Csv.export_as_csv]
-
 
 
 class AnswerBaseInline(admin.StackedInline):
