@@ -23,7 +23,7 @@ class SurveyDetail(LoginRequiredMixin, View):
             template_name = survey.template
         else:
             if survey.display_by_question:
-                template_name = "survey.html"
+                template_name = "survey_detail.html"
             else:
                 template_name = "one_page_survey.html"
         categories = Category.objects.filter(survey=survey).order_by("order")
@@ -50,7 +50,7 @@ class SurveyDetail(LoginRequiredMixin, View):
         categories = Category.objects.filter(survey=survey).order_by("order")
         form = ResponseForm(request.POST, survey=survey, user=request.user, step=kwargs.get("step", 0))
         if not survey.editable_answers and form.response is not None:
-            LOGGER.info("Redirects to survey list after trying to edit non editable answer.")
+            LOGGER.info("Redirects to survey list after trying to survey non editable answer.")
             return redirect(reverse("survey:survey-list"))
         context = {"response_form": form, "survey": survey, "categories": categories}
         if form.is_valid():
@@ -64,7 +64,7 @@ class SurveyDetail(LoginRequiredMixin, View):
             template_name = survey.template
         else:
             if survey.display_by_question:
-                template_name = "survey.html"
+                template_name = "survey_detail.html"
             else:
                 template_name = "one_page_survey.html"
         return render(request, template_name, context)

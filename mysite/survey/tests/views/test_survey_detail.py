@@ -97,7 +97,7 @@ class TestSurveyDetail(BaseTest):
         response_saved = Response.objects.filter(user__username=settings.DEBUG_ADMIN_NAME, survey__id=5)
         self.assertEqual(len(response_saved.all()), 1)
 
-        # tries normal edit
+        # tries normal survey
         response = self.client.post(reverse("survey-detail", args=(5,)), data={"question_11": 56})
         response = self.client.post(reverse("survey-detail-step", args=(5, 1)), data={"question_12": "yes"})
         response_saved = Response.objects.filter(user__username=settings.DEBUG_ADMIN_NAME, survey__id=5)
@@ -108,7 +108,7 @@ class TestSurveyDetail(BaseTest):
         self.assertEqual(len(answer_saved.all()), 1)
         self.assertEqual(answer_saved[0].body, "56")
 
-        # tries forbidden edit (only a part of the form)
+        # tries forbidden survey (only a part of the form)
         response = self.client.post(reverse("survey-detail-step", args=(5, 1)), data={"question_12": "no"})
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, reverse("survey-list"))

@@ -9,15 +9,21 @@ from django.forms import models
 from django.urls import reverse
 from django.utils.text import slugify
 
+from django.forms.models import inlineformset_factory
+from .models import Survey, Category
+
 from survey.models import Answer, Question, Response
 from survey.signals import survey_completed
 from survey.widgets import ImageSelectWidget
+
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Layout, Field, Fieldset, Div, HTML, ButtonHolder, Submit
+from .custom_layout_object import Formset
 
 LOGGER = logging.getLogger(__name__)
 
 
 class ResponseForm(models.ModelForm):
-
     FIELDS = {
         Question.TEXT: forms.CharField,
         Question.SHORT_TEXT: forms.CharField,
@@ -272,3 +278,10 @@ class ResponseForm(models.ModelForm):
                 answer.save()
         survey_completed.send(sender=Response, instance=response, data=data)
         return response
+
+
+CategoryFormSet = inlineformset_factory(Survey,
+                                        Category,
+                                        fields=['name', 'description'],
+                                        extra=1,
+                                        can_delete=True)

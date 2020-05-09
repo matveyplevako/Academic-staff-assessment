@@ -29,6 +29,7 @@
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 {% if request.user.is_authenticated %}
+                    <li><a href="{% url "survey:survey-list" %}">{{ user.username }}</a></li>
                     <li><a href="{% url "logout" %}">Sign out</a></li>
                 {% else %}
                     <li><a href="{% url "login" %}">Sign in</a></li>
@@ -47,6 +48,16 @@
                 <h4 class="list-group-item-heading">Survey app page</h4>
             </a>
         </div>
+        {% if perms.survey.add_survey %}
+
+        <div class="list-group">
+            <a class="list-group-item"
+               href="{% url "survey:manage_survey_list" %}">
+                <h4 class="list-group-item-heading">Create survey</h4>
+            </a>
+        </div>
+        {% endif %}
+
     </div>
 </div>
 <div class="footer">

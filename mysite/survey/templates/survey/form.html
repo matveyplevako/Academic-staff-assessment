@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {% if object %}
+        Edit survey "{{ object.title }}"
+    {% else %}
+        Create a new survey
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+    <h1>
+        {% if object %}
+            Edit survey "{{ object.title }}"
+        {% else %}
+            Create a new survey
+        {% endif %}
+    </h1>
+    <div class="module">
+        <h2>Survey info</h2>
+        <form action="." method="post">
+            {{ form.as_p }}
+            {% csrf_token %}
+            <p><input type="submit" value="Save survey" class="btn btn-default"></p>
+            <a href="{% url "survey:manage_survey_list" %}" class="btn btn-default">Cancel</a>
+        </form>
+    </div>
+{% endblock %}

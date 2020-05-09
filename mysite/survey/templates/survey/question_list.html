@@ -1,0 +1,114 @@
+{% load static %}
+{#{% load course %}#}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>{% block title %}Survey{% endblock %}</title>
+    <link href="{% static "css/base.css" %}" rel="stylesheet">
+</head>
+<body>
+<div id="header">
+    <a href="/" class="logo"> Survey</a>
+    <ul class="menu">
+        {% if request.user.is_authenticated %}
+            <li><a href="{% url "logout" %}">Sign out</a></li>
+        {% else %}
+            <li><a href="{% url "login" %}">Sign in</a></li>
+        {% endif %}
+    </ul>
+</div>
+<div id="content">
+    {% with survey=category.survey %}
+        <h1>Survey "{{ survey.name }}"</h1>
+        <div class="contents">
+            <h3>Categories</h3>
+            <ul id="modules">
+                {% for c in survey.categories.all %}
+                    <li data-id="{{ c.id }}" {% if c == category %}class="selected"{% endif %}>
+                        <a href="{% url "survey:category_question_list" c.id %}">
+                        <span>
+                Category <span class="order">{{ c.order|add:1 }}</span>
+              </span>
+                            <br>
+                            {{ c.name }}
+                        </a>
+                    </li>
+                    {% empty %}
+                    <li>No categories yet.</li>
+                {% endfor %}
+            </ul>
+            <p><a href="{% url "survey:survey_category_update" survey.id %}">Edit categories</a></p>
+        </div>
+        <div class="module">
+            <h2>Category {{ category.order|add:1 }}: {{ category.name }}</h2>
+            <h3>Category contents:</h3>
+
+            <div id="module-contents">
+                {% for question in category.questions.all %}
+                    <div data-id="{{ question.id }}">
+                        <p>{{ question.text }}</p>
+                        <a href="{% url "survey:category_question_update" category.id question.id %}">Edit</a>
+                        <form action="{% url "survey:category_question_delete" question.id %}" method="post">
+                            <input type="submit" value="Delete">
+                            {% csrf_token %}
+                        </form>
+
+                    </div>
+                    {% empty %}
+                    <p>This category has no questions yet.</p>
+                {% endfor %}
+            </div>
+            <h3>Add new question:</h3>
+            <ul class="content-types">
+                <li><a href="{% url "survey:category_question_create" category.id %}">New Question</a></li>
+            </ul>
+        </div>
+    {% endwith %}
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#modules').sortable({
+            stop: function (event, ui) {
+                modules_order = {};
+                $('#modules').children().each(function () {
+                    // update the order field
+                    $(this).find('.order').text($(this).index() + 1);
+                    // associate the module's id with its order
+                    modules_order[$(this).data('id')] = $(this).index();
+                });
+                $.ajax({
+                    type: 'POST',
+                    url: '{% url "survey:category_order" %}',
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json',
+                    data: JSON.stringify(modules_order)
+                });
+            }
+        });
+
+        $('#module-contents').sortable({
+            stop: function (event, ui) {
+                contents_order = {};
+                $('#module-contents').children().each(function () {
+                    // associate the module's id with its order
+                    contents_order[$(this).data('id')] = $(this).index();
+                });
+
+                $.ajax({
+                    type: 'POST',
+                    url: '{% url "survey:question_order" %}',
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json',
+                    data: JSON.stringify(contents_order),
+                });
+            }
+        });
+    });
+</script>
+</body>
+</html>

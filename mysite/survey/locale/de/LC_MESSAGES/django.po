@@ -284,7 +284,7 @@ msgid "Only authenticated users can see it and answer it"
 msgstr "Nur autentifizierte Benutzer können sie sehen und beantworten"
 
 #: survey/models/survey.py:21
-msgid "Users can edit their answers afterwards"
+msgid "Users can survey their answers afterwards"
 msgstr "Benutzer können ihre Antworten im nachhinein verändern"
 
 #: survey/models/survey.py:22

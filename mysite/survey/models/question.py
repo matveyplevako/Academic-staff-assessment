@@ -10,6 +10,7 @@ from django.utils.translation import gettext_lazy as _
 
 from .category import Category
 from .survey import Survey
+from ..fields import OrderField
 
 try:  # pragma: no cover
     from _collections import OrderedDict
@@ -17,7 +18,6 @@ except ImportError:  # pragma: no cover
     from ordereddict import OrderedDict
 
 LOGGER = logging.getLogger(__name__)
-
 
 CHOICES_HELP_TEXT = _(
     """The choices field is only used if the question type
@@ -48,7 +48,6 @@ class SortAnswer:
 
 
 class Question(models.Model):
-
     TEXT = "text"
     SHORT_TEXT = "short-text"
     RADIO = "radio"
@@ -65,14 +64,14 @@ class Question(models.Model):
         (RADIO, _("radio")),
         (SELECT, _("select")),
         (SELECT_MULTIPLE, _("Select Multiple")),
-        (SELECT_IMAGE, _("Select Image")),
+        # (SELECT_IMAGE, _("Select Image")),
         (INTEGER, _("integer")),
         (FLOAT, _("float")),
         (DATE, _("date")),
     )
 
     text = models.TextField(_("Text"))
-    order = models.IntegerField(_("Order"))
+    order = OrderField(blank=True, for_fields=['category'])
     required = models.BooleanField(_("Required"))
     category = models.ForeignKey(
         Category, on_delete=models.SET_NULL, verbose_name=_("Category"), blank=True, null=True, related_name="questions"
@@ -84,7 +83,7 @@ class Question(models.Model):
     class Meta:
         verbose_name = _("question")
         verbose_name_plural = _("questions")
-        ordering = ("survey", "order")
+        ordering = ["order"]
 
     def save(self, *args, **kwargs):
         if self.type in [Question.RADIO, Question.SELECT, Question.SELECT_MULTIPLE]:
@@ -128,13 +127,13 @@ class Question(models.Model):
         return [Question.standardize(strng, group_by_letter_case, group_by_slugify) for strng in string_list]
 
     def answers_cardinality(
-        self,
-        min_cardinality=None,
-        group_together=None,
-        group_by_letter_case=None,
-        group_by_slugify=None,
-        filter=None,
-        other_question=None,
+            self,
+            min_cardinality=None,
+            group_together=None,
+            group_by_letter_case=None,
+            group_by_slugify=None,
+            filter=None,
+            other_question=None,
     ):
         """ Return a dictionary with answers as key and cardinality (int or
             dict) as value
@@ -182,14 +181,14 @@ class Question(models.Model):
         )
 
     def __answers_cardinality(
-        self,
-        min_cardinality,
-        group_together,
-        group_by_letter_case,
-        group_by_slugify,
-        filter,
-        standardized_filter,
-        other_question,
+            self,
+            min_cardinality,
+            group_together,
+            group_by_letter_case,
+            group_by_slugify,
+            filter,
+            standardized_filter,
+            other_question,
     ):
         """ Return an ordered dict but the insertion order is the order of
         the related manager (ie question.answers).
@@ -240,14 +239,14 @@ class Question(models.Model):
         return cardinality
 
     def __handle_other_question_cardinality(
-        self,
-        cardinality,
-        filter,
-        group_by_letter_case,
-        group_by_slugify,
-        group_together,
-        other_question,
-        standardized_filter,
+            self,
+            cardinality,
+            filter,
+            group_by_letter_case,
+            group_by_slugify,
+            group_together,
+            other_question,
+            standardized_filter,
     ):
         """Treating the value for Other question that were not answered in this question"""
         for answer in other_question.answers.all():
@@ -258,14 +257,14 @@ class Question(models.Model):
                         self._cardinality_plus_answer(cardinality, _(settings.USER_DID_NOT_ANSWER), value)
 
     def sorted_answers_cardinality(
-        self,
-        min_cardinality=None,
-        group_together=None,
-        group_by_letter_case=None,
-        group_by_slugify=None,
-        filter=None,
-        sort_answer=None,
-        other_question=None,
+            self,
+            min_cardinality=None,
+            group_together=None,
+            group_by_letter_case=None,
+            group_by_slugify=None,
+            filter=None,
+            sort_answer=None,
+            other_question=None,
     ):
         """ Mostly to have reliable tests, but marginally nicer too...
 
@@ -336,16 +335,16 @@ class Question(models.Model):
         return value
 
     def __add_user_cardinality(
-        self,
-        cardinality,
-        user,
-        value,
-        other_question,
-        group_by_letter_case,
-        group_by_slugify,
-        group_together,
-        filter,
-        standardized_filter,
+            self,
+            cardinality,
+            user,
+            value,
+            other_question,
+            group_by_letter_case,
+            group_by_slugify,
+            group_together,
+            filter,
+            standardized_filter,
     ):
         found_answer = False
         for other_answer in other_question.answers.all():

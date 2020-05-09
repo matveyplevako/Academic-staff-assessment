@@ -29,13 +29,13 @@
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 {% if request.user.is_authenticated %}
+                    <li><a href="{% url "survey:survey-list" %}">{{ user.username }}</a></li>
                     <li><a href="{% url "logout" %}">Sign out</a></li>
                 {% else %}
                     <li><a href="{% url "login" %}">Sign in</a></li>
                     <li><a href="{% url "student_registration" %}">Sign up</a></li>
                 {% endif %}
             </ul>
-
         </div>
     </div>
 </nav>
@@ -54,7 +54,6 @@
 <script type="text/javascript" src="{% static 'js/jquery-ui.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/custom.js' %}"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/ 3.3.1/jquery.min.js"></script>
 <script> $(document).ready(function () {
     {% block domready %}
     {% endblock %}

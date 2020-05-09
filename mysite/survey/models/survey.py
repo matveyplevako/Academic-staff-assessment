@@ -6,6 +6,7 @@ from django.db import models
 from django.urls import reverse
 from django.utils.timezone import now
 from django.utils.translation import gettext_lazy as _
+from django.contrib.auth.models import User
 
 
 def in_duration_day():
@@ -13,11 +14,13 @@ def in_duration_day():
 
 
 class Survey(models.Model):
-
+    owner = models.ForeignKey(User,
+                              related_name='%(class)s_related',
+                              on_delete=models.CASCADE)
     name = models.CharField(_("Name"), max_length=400)
     description = models.TextField(_("Description"))
     is_published = models.BooleanField(_("Users can see it and answer it"), default=True)
-    need_logged_user = models.BooleanField(_("Only authenticated users can see it and answer it"))
+    need_logged_user = models.BooleanField(_("Only authenticated users can see it and answer it"), default=True)
     editable_answers = models.BooleanField(_("Users can edit their answers afterwards"), default=True)
     display_by_question = models.BooleanField(_("Display by question"), default=False)
     template = models.CharField(_("Template"), max_length=255, null=True, blank=True)

@@ -283,7 +283,7 @@ msgid "Only authenticated users can see it and answer it"
 msgstr "只有认证用户可以浏览和回答"
 
 #: survey/models/survey.py:21
-msgid "Users can edit their answers afterwards"
+msgid "Users can survey their answers afterwards"
 msgstr "用户可以随后编辑他们的答案"
 
 #: survey/models/survey.py:22
