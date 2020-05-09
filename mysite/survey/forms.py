@@ -16,10 +16,6 @@ from survey.models import Answer, Question, Response
 from survey.signals import survey_completed
 from survey.widgets import ImageSelectWidget
 
-from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Field, Fieldset, Div, HTML, ButtonHolder, Submit
-from .custom_layout_object import Formset
-
 LOGGER = logging.getLogger(__name__)
 
 
