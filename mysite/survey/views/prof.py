@@ -86,7 +86,7 @@ class SurveyCategoryUpdateView(TemplateResponseMixin, View):
         if formset.is_valid():
             formset.save()
             return redirect('survey:manage_survey_list')
-        return self.render_to_response({'course': self.survey,
+        return self.render_to_response({'survey': self.survey,
                                         'formset': formset})
 
 
