@@ -1,5 +1,12 @@
 {% load bootstrap %}
 
+{% block extracss %}
+    <style>
+        input[type=radio] {
+            display: none;
+        }
+    </style>
+{% endblock %}
 <table class="table table-hover">
     <!--<thead>
       <tr>
@@ -21,12 +28,26 @@
 	            </span> <br>
                     {% if form.field.widget.input_type == 'select' %}
                         <select name="{{ form.name }}"{% if form.field.widget.attrs.disabled %} disabled{% endif %}>
+                    {% elif form.field.widget.input_type in 'radio' %}
+                        <div class="btn-group" data-toggle="buttons">
                     {% endif %}
                     {% for field in form %}
+                        {% if form.field.widget.input_type in 'radio' %}
+                            {% if field.data.selected %}
+                                <label class="btn btn-default active">
+                            {% else %}
+                                <label class="btn btn-default">
+                            {% endif %}
                         {{ field }}
+                        </label>
+                        {% else %}
+                            {{ field }}
+                        {% endif %}
                     {% endfor %}
                     {% if form.field.widget.input_type == 'select' %}
                         </select>
+                    {% elif form.field.widget.input_type in 'radio' %}
+                        </div>
                     {% endif %}
                 </td>
             </tr>
