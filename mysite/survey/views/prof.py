@@ -173,9 +173,9 @@ class QuestionCreateUpdateView(TemplateResponseMixin, View):
 
 class QuestionDeleteView(View):
 
-    def post(self, request, id):
+    def post(self, request, pk):
         question = get_object_or_404(Question,
-                                     id=id,
+                                     id=pk,
                                      survey__owner=request.user)
         category = question.category
         question.delete()
@@ -196,13 +196,18 @@ class SurveyResults(TemplateResponseMixin, View):
             choices = q.choices.split(",")
             ans_list = q.answers_as_text
             if q.type == Question.SELECT_MULTIPLE:
-                ans_list = [x for l in ans_list for x in l]
+                rep = []
+                for elem in ans_list:
+                    elem = elem[1:-1]
+                    for item in elem.split(","):
+                        item = item.strip()[1:-1]
+                        rep.append(item)
+                ans_list = rep
             count_ans = Counter(ans_list)
-            count_choices = [str(count_ans[choice]) for choice in choices]
+            count_choices = [count_ans[choice] for choice in choices]
             for_pie_chart.append([q.text, choices, count_choices])
 
         other_questions = survey.questions.exclude(type__in=[Question.RADIO, Question.SELECT, Question.SELECT_MULTIPLE])
-
         return self.render_to_response({'survey': survey,
                                         'for_pie_chart': for_pie_chart,
                                         'other_questions': other_questions})

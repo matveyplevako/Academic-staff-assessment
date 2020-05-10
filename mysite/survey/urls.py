@@ -46,7 +46,7 @@ urlpatterns = [
     path('module/<int:category_id>/content/<id>/',
          QuestionCreateUpdateView.as_view(),
          name='category_question_update'),
-    path('content/<int:id>/delete/',
+    path('content/<pk>/delete/',
          QuestionDeleteView.as_view(),
          name='category_question_delete'),
     path('category/<int:category_id>/',
