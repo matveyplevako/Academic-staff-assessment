@@ -14,6 +14,7 @@ from survey.views.prof import QuestionOrderView
 from survey.views.prof import CategoryQuestionListView
 from survey.views.prof import QuestionCreateUpdateView
 from survey.views.prof import QuestionDeleteView
+from survey.views.prof import SurveyResults
 
 
 # __all__ = ["SurveyCompleted", "IndexView", "ConfirmView", "SurveyDetail"]

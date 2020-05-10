@@ -6,7 +6,7 @@ from survey.views import ConfirmView, IndexView, SurveyCompleted, SurveyDetail
 from survey.views import ManageSurveyListView, SurveyCreateView, SurveyUpdateView
 from survey.views import SurveyDeleteView, SurveyCategoryUpdateView, QuestionCreateUpdateView
 from survey.views import CategoryOrderView, QuestionOrderView, CategoryQuestionListView
-from survey.views import QuestionDeleteView
+from survey.views import QuestionDeleteView, SurveyResults
 from survey.views.survey_result import serve_result_csv
 
 app_name = 'survey'
@@ -31,6 +31,9 @@ urlpatterns = [
     path('<pk>/delete/',
          SurveyDeleteView.as_view(),
          name='survey_delete'),
+    path('<survey_id>/results/',
+         SurveyResults.as_view(),
+         name='survey_results'),
     path('<pk>/category/',
          SurveyCategoryUpdateView.as_view(),
          name='survey_category_update'),

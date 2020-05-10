@@ -1,0 +1,169 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Survey Results</title>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
+    <link rel="stylesheet" href={% static 'css/mdb.css' %}>
+    <link rel="stylesheet" href={% static 'css/style.css' %}>
+    <link rel="stylesheet" href={% static 'css/bootstrap.css' %}>
+
+</head>
+<body>
+
+
+<div class="w-75 p-3" id="center_div">
+    <h1 class="text-center title">Survey {{ survey.name }} results</h1>
+    {% if for_pie_chart %}
+        <h5 class="text-center">Answers for questions with select field</h5>
+    {% endif %}
+</div>
+
+
+<script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/mdb.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/popper.min.js' %}"></script>
+
+
+<script type="text/javascript">
+    var survey = [
+        {% for data in for_pie_chart %}
+            {
+                txt: "{{ data.0 }}",
+                answers: [{% for answer in data.1 %} "{{ answer }}", {% endfor %}],
+                values: [{% for value in data.2 %} {{ value }}, {% endfor %}],
+            },
+        {% endfor %}
+    ];
+    var profEvaluation = {
+        ratings: [100, 150, 400, 450, 500],
+        months: ["January", "February", "March", "April", "May"]
+    };
+    prof = false;
+    if (prof) {
+        var dvProf = document.createElement('div');
+        dvProf.id = "divProf";
+        dvProf.innerHTML += "Professor Hamna Aslam";
+        var cnvsProf = document.createElement('canvas');
+        cnvsProf.id = "profEval";
+        cnvsProf.height = "70";
+        var distinguish = document.createElement('div');
+        distinguish.id = "w-25 p-3";
+        distinguish.height = "100";
+        distinguish.style.border = "1px solid grey";
+        var main_div = document.getElementById("center_div");
+        main_div.appendChild(dvProf);
+        main_div.appendChild(cnvsProf);
+        main_div.appendChild(distinguish);
+        var ctxL = document.getElementById("profEval").getContext('2d');
+        var myLineChart = new Chart(ctxL, {
+            type: 'line',
+            data: {
+                labels: profEvaluation.months,
+                datasets: [{
+                    label: "Evaluation",
+                    data: profEvaluation.ratings,
+                    backgroundColor: [
+                        'rgba(105, 0, 132, .2)',
+                    ],
+                    borderColor: [
+                        'rgba(200, 99, 132, .7)',
+                    ],
+                    borderWidth: 2
+                }
+                ]
+            },
+            options: {
+                responsive: true
+            }
+        });
+    }
+
+    survey.forEach((element, i) => {
+        var dv = document.createElement('div');
+        dv.id = "div" + i.toString(10);
+        dv.classList.add("card");
+        dv.classList.add("card-body");
+        dv.innerHTML += element.txt;
+        var cnvs = document.createElement('canvas');
+        cnvs.id = "labelChart" + i.toString(10);
+        dv.appendChild(cnvs);
+        var main_div = document.getElementById("center_div");
+        main_div.appendChild(dv);
+        {#main_div.appendChild(cnvs);#}
+        var ctxP = document.getElementById("labelChart" + i.toString(10)).getContext('2d');
+        var myPieChart = new Chart(ctxP, {
+            plugins: [ChartDataLabels],
+            type: 'pie',
+            data: {
+                labels: element.answers,
+                datasets: [{
+                    data: element.values,
+                    backgroundColor: ["#F7464A", "#46BFBD", "#FDB45C", "#949FB1", "#4D5360"],
+                    hoverBackgroundColor: ["#FF5A5E", "#5AD3D1", "#FFC870", "#A8B3C5", "#616774"]
+                }]
+            },
+            options: {
+                responsive: true,
+                legend: {
+                    position: 'right',
+                    labels: {
+                        padding: 20,
+                        boxWidth: 10
+                    }
+                },
+                plugins: {
+                    datalabels: {
+                        formatter: (value, ctx) => {
+                            let sum = 0;
+                            let dataArr = ctx.chart.data.datasets[0].data;
+                            dataArr.map(data => {
+                                sum += data;
+                            });
+                            let percentage = value.toString(10) + ": " + (value * 100 / sum).toFixed(2) + "%";
+                            return percentage;
+                        },
+                        color: 'white',
+                        labels: {
+                            title: {
+                                font: {
+                                    size: '16'
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    });
+</script>
+
+{% if other_questions %}
+    <h5 class="text-center">Answers for questions with input field</h5>
+{% endif %}
+
+<div class="container">
+    {% for question in other_questions %}
+        <div class="card" style="width: 18rem;">
+            <div class="card-header">
+                {{ question.text }}
+            </div>
+            <ul class="list-group list-group-flush">
+                {% for ans in question.answers_as_text %}
+                    <li class="list-group-item">{{ ans }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endfor %}
+</div>
+
+
+<footer class="footer" style="padding-bottom: 10%;">
+</footer>
+</body>
+</html>

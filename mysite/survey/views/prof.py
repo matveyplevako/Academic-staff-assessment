@@ -5,9 +5,10 @@ from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView, \
     DeleteView
 from django.views.generic.base import TemplateResponseMixin, View
-from django.shortcuts import redirect, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
 from braces.views import CsrfExemptMixin, JsonRequestResponseMixin
 from django.forms.models import modelform_factory
+from collections import Counter
 
 from ..forms import CategoryFormSet
 
@@ -180,17 +181,28 @@ class QuestionDeleteView(View):
         question.delete()
         return redirect('survey:category_question_list', category.id)
 
-# class QuestionCreateUpdateView(PermissionRequiredMixin,
-#                                OwnerSurveyEditMixin,
-#                                CreateView):
-#     fields = '__all__'
-#     # fields = ['text']
-#
-#     model = Question
-#     template_name = 'survey/create_question.html'
-#     permission_required = 'question.add_survey'
-#     success_url = reverse_lazy('survey:manage_survey_list')
-#
-#     def form_valid(self, form):
-#         form.instance.owner = self.request.user
-#         return super(OwnerEditMixin, self).form_valid(form)
+
+class SurveyResults(TemplateResponseMixin, View):
+    template_name = 'survey_results.html'
+
+    def get(self, request, survey_id):
+        survey = get_object_or_404(Survey,
+                                   id=survey_id,
+                                   owner=request.user)
+
+        for_pie_chart = []
+        pie_questions = survey.questions.filter(type__in=[Question.RADIO, Question.SELECT, Question.SELECT_MULTIPLE])
+        for q in pie_questions:
+            choices = q.choices.split(",")
+            ans_list = q.answers_as_text
+            if q.type == Question.SELECT_MULTIPLE:
+                ans_list = [x for l in ans_list for x in l]
+            count_ans = Counter(ans_list)
+            count_choices = [str(count_ans[choice]) for choice in choices]
+            for_pie_chart.append([q.text, choices, count_choices])
+
+        other_questions = survey.questions.exclude(type__in=[Question.RADIO, Question.SELECT, Question.SELECT_MULTIPLE])
+
+        return self.render_to_response({'survey': survey,
+                                        'for_pie_chart': for_pie_chart,
+                                        'other_questions': other_questions})

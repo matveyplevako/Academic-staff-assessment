@@ -26,10 +26,13 @@
         <div id="navbar" class="navbar-collapse collapse" aria-expanded="false" style="height: 1px;">
             <ul class="nav navbar-nav navbar-left">
                 <li><a href="{% url "survey:survey-list" %}">Survey list</a></li>
+                {% if perms.survey.add_survey %}
+                    <li><a href="{% url "survey:manage_survey_list" %}">Manage surveys</a></li>
+                {% endif %}
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 {% if request.user.is_authenticated %}
-                    <li><a href="{% url "survey:survey-list" %}">{{ user.username }}</a></li>
+                    <li><a href="{% url "home" %}">{{ user.username }}</a></li>
                     <li><a href="{% url "logout" %}">Sign out</a></li>
                 {% else %}
                     <li><a href="{% url "login" %}">Sign in</a></li>
