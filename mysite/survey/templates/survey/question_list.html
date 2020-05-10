@@ -5,6 +5,7 @@
 <head>
     <meta charset="utf-8"/>
     <title>{% block title %}Survey{% endblock %}</title>
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" type="text/css"/>
     <link href="{% static "css/base.css" %}" rel="stylesheet">
 </head>
 <body>
@@ -47,13 +48,12 @@
             <div id="module-contents">
                 {% for question in category.questions.all %}
                     <div data-id="{{ question.id }}">
-                        <p>{{ question.text }}</p>
-                        <a href="{% url "survey:category_question_update" category.id question.id %}">Edit</a>
+                        <h4>{{ question.text }}</h4>
+                        <a href="{% url "survey:category_question_update" category.id question.id %}" class="btn btn-success">Edit</a>
                         <form action="{% url "survey:category_question_delete" question.id %}" method="post">
                             <input type="submit" value="Delete">
                             {% csrf_token %}
                         </form>
-
                     </div>
                     {% empty %}
                     <p>This category has no questions yet.</p>

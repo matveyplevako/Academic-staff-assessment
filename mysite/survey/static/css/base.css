@@ -30,9 +30,9 @@ h1 {
 }
 
 .module {
-    padding:10px 20px;
+    padding:10px 50px;
     float:left;
-    width:600px;
+    width:800px;
 }
 
 .module h3 {
@@ -76,10 +76,11 @@ h1 {
 }
 
 .contents {
-    width:20%;
+    width:350px;
     padding:10px;
     float:left;
     background:#333;
+    /*background:gray;*/
     color: #fff;
     font-family:'Roboto', sans-serif;
 }

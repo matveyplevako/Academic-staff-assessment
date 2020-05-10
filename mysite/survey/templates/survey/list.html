@@ -11,7 +11,7 @@
                 <h3>{{ survey.name }}</h3>
                 <a href="{% url "survey:survey_results" survey.id %}" class="btn btn-success">View answers</a>
 
-                <a href="{% url "survey:survey_edit" survey.id %}" class="btn btn-default">Edit</a>
+                <a href="{% url "survey:survey_edit" survey.id %}" class="btn btn-warning">Edit</a>
                 <a href="{% url "survey:survey_category_update" survey.id %}" class="btn btn-warning">Edit
                     categories</a>
 
