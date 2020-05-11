@@ -1,3 +1,4 @@
+six
 Django
 django-heroku
 psycopg2
