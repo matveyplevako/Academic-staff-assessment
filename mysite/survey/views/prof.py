@@ -208,8 +208,9 @@ class SurveyResults(TemplateResponseMixin, View):
                         item = item.strip()[1:-1]
                         rep.append(item)
                 ans_list = rep
+            ans_list = list(map(lambda x: x.lower(), ans_list))
             count_ans = Counter(ans_list)
-            count_choices = [count_ans[choice] for choice in choices]
+            count_choices = [count_ans[choice.lower()] for choice in choices]
             for_pie_chart.append([q.text, choices, count_choices])
 
         other_questions = survey.questions.exclude(type__in=[Question.RADIO, Question.SELECT, Question.SELECT_MULTIPLE])
