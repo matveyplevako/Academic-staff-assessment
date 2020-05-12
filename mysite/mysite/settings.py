@@ -122,7 +122,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST = env.get('SMTP_HOST')
 EMAIL_HOST_USER = env.get('SMTP_EMAIL')
 EMAIL_HOST_PASSWORD = env.get('SMTP_PASSWORD')
 EMAIL_PORT = 587
