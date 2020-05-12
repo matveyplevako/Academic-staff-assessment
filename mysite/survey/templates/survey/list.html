@@ -10,14 +10,15 @@
             <div class="course-info">
                 <h3>{{ survey.name }}</h3>
                 <a href="{% url "survey:survey_results" survey.id %}" class="btn btn-success">View answers</a>
+                {% if survey.owner.username == 'doe' or user.username != 'doe' %}
+                    <a href="{% url "survey:survey_edit" survey.id %}" class="btn btn-warning">Edit</a>
+                    <a href="{% url "survey:survey_category_update" survey.id %}" class="btn btn-warning">Edit
+                        categories</a>
 
-                <a href="{% url "survey:survey_edit" survey.id %}" class="btn btn-warning">Edit</a>
-                <a href="{% url "survey:survey_category_update" survey.id %}" class="btn btn-warning">Edit
-                    categories</a>
-
-                {% if survey.categories.count > 0 %}
-                    <a href="{% url "survey:category_question_list" survey.categories.first.id %}"
-                       class="btn btn-info">Manage questions</a>
+                    {% if survey.categories.count > 0 %}
+                        <a href="{% url "survey:category_question_list" survey.categories.first.id %}"
+                           class="btn btn-info">Manage questions</a>
+                    {% endif %}
                 {% endif %}
                 <a href="{% url "survey:survey_delete" survey.id %}" class="btn btn-danger">Delete</a>
             </div>
