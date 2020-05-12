@@ -125,6 +125,6 @@ EMAIL_USE_TLS = True
 EMAIL_HOST = env.get('SMTP_HOST')
 EMAIL_HOST_USER = env.get('SMTP_EMAIL')
 EMAIL_HOST_PASSWORD = env.get('SMTP_PASSWORD')
-EMAIL_PORT = 587
+EMAIL_PORT = env.get('SMTP_PORT')
 
 django_heroku.settings(locals())
