@@ -8,15 +8,15 @@
     <title>Survey Results</title>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
-    <link rel="stylesheet" href={% static 'css/mdb.css' %}>
     <link rel="stylesheet" href={% static 'css/style.css' %}>
     <link rel="stylesheet" href={% static 'css/bootstrap.css' %}>
+    <link rel="stylesheet" href={% static 'css/mdb.css' %}>
 
 </head>
 <body>
 
 
-<div class="w-75 p-3" id="center_div">
+<div class="w-75 p-3 text-center" id="center_div" >
     <h1 class="text-center title">Survey {{ survey.name }} results</h1>
     {% if for_pie_chart %}
         <h5 class="text-center">Answers for questions with select field</h5>
@@ -147,19 +147,23 @@
     <h5 class="text-center">Answers for questions with input field</h5>
 {% endif %}
 
-<div class="container">
-    {% for question in other_questions %}
-        <div class="card" style="width: 18rem;">
-            <div class="card-header">
-                {{ question.text }}
+<div class="d-flex justify-content-center">
+    <div class="text-center">
+        {% for question in other_questions %}
+            <div class="card" style="width: 18rem;">
+                <div class="card-header">
+                    {{ question.text }}
+                </div>
+                <ul class="list-group list-group-flush">
+                    {% for ans in question.answers_as_text %}
+                        {% if ans %}
+                            <li class="list-group-item">{{ ans }}</li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
             </div>
-            <ul class="list-group list-group-flush">
-                {% for ans in question.answers_as_text %}
-                    <li class="list-group-item">{{ ans }}</li>
-                {% endfor %}
-            </ul>
-        </div>
-    {% endfor %}
+        {% endfor %}
+    </div>
 </div>
 
 
