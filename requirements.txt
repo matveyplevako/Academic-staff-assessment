@@ -3,6 +3,7 @@ Django
 django-heroku
 psycopg2
 gunicorn
+django-widget-tweaks
 django-bootstrap-form
 django-braces
 pyyaml
