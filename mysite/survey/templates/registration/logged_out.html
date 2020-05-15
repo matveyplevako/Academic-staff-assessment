@@ -1,9 +1,20 @@
 {% extends "base.html" %}
 {% block title %}Logged out{% endblock %}
 {% block body %}
-    <h1>Logged out</h1>
-    <div class="module">
-        <p>You have been successfully logged out.
-            You can <a href="{% url "login" %}">log-in again</a>.</p>
+    <div class="h-100 row align-items-center"><!--div for survey name and description-->
+        <div class="col">
+            <h3 class="font-weight-bold text-center mt-3">Logged out</h3>
+            <hr>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col text-center">
+                <a type="button" class="btn btn-outline-primary waves-effect" data-dismiss="modal"
+                   href="{% url "login" %}">Log in</a>
+                <a type="button" class="btn btn-outline-primary waves-effect" data-dismiss="modal"
+                   href="{% url "home" %}">Main Page</a>
+            </div>
+        </div>
     </div>
 {% endblock %}

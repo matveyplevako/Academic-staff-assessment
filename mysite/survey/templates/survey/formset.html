@@ -1,44 +1,96 @@
 {% extends "base.html" %}
+{% load widget_tweaks %}
 
 {% block title %}
     Edit "{{ survey.name }}"
 {% endblock %}
 
 {% block body %}
-    <h3>Edit categories</h3>
-    <form action="" method="post">
-        {{ formset.management_form }}
-        {% csrf_token %}
-        <div id="form_set">
-            {% for form in formset.forms %}
-                {{ form.non_field_errors }}
-                {{ form.errors }}
-                <table class='no_error'>
-                    {{ form }}
-                </table>
-            {% endfor %}
-        </div>
-        <input type="button" class="btn btn-success" value="Add More" id="add_more">
-        <p>left empty or mark delete to remove</p>
-        <br>
-        <input type="submit" class=" btn btn-primary" value="Save changes">
-        <br>
-        <br>
-        <a href="{% url "survey:manage_survey_list" %}" class="btn button btn-danger">Cancel</a>
+    <div class="h-100 mt-5 row align-items-center"><!--div for EVERYTHING-->
+        <div class="col border border-light" id="f1"><!--also div for EVERYTHING-->
+            <h5 class="font-weight-bold text-center mt-3">Edit Categories</h5>
+            <hr>
+            <form action="" method="post">
+                {{ formset.management_form }}
+                {% csrf_token %}
+                <div id="form_set">
+                    {% for form in formset.forms %}
+                        {{ form.non_field_errors }}
+                        {{ form.errors }}
+                        <div class="col mt-2 border-bottom border-light">
+                            <div class='table'>
+                                <table class='no_error'>
+                                    {% for field in form %}
+                                        {% if not field.is_hidden %}
+                                            <div class="form-group">
+                                                {{ field.errors }}
+                                                {{ field.label }}
+                                                {% render_field field class+="form-control" %}
+                                            </div>
+                                        {% else %}
+                                            {{ field }}
+                                        {% endif %}
+                                    {% endfor %}
+                                </table>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="col">
+                    <input type="button" class="btn btn-primary" value="Add Category" id="add_more">
+                </div>
+                <div class="col">
+                    <input type="submit" class="btn btn-outline-primary waves-effect" value="Save changes">
+                </div>
 
-        <div id="empty_form" style="display:none">
-            <table class='no_error'>
-                {{ formset.empty_form }}
-            </table>
+                <div id="empty_form" style="display:none">
+                    {#                    {{ formset.empty_form }}#}
+                    <div class="col mt-2 border-bottom border-light">
+                        {% for field in formset.empty_form %}
+                            {% if not field.is_hidden %}
+                                <div class="form-group">
+                                    {{ field.errors }}
+                                    {{ field.label }}
+                                    {% render_field field class+="form-control" %}
+                                </div>
+                            {% else %}
+                                {{ field }}
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </form>
+
+            <a href="{% url "survey:manage_survey_list" %}" class="btn button btn-danger">Cancel</a>
         </div>
-    </form>
+    </div>
 {% endblock %}
+
+
 
 {% block extrajs %}
     <script>$('#add_more').click(function () {
-        var form_idx = $('#id_form-TOTAL_FORMS').val();
-        $('#form_set').append($('#empty_form').html().replace(/__prefix__/g, form_idx));
-        $('#id_form-TOTAL_FORMS').val(parseInt(form_idx) + 1);
-    });</script>
+        cloneMore('div.table:last', 'categories');
+    })
+    ;</script>
+
+    <script type="text/javascript">
+        function cloneMore(selector, type) {
+            var newElement = $(selector).clone(true);
+            var total = $('#id_' + type + '-TOTAL_FORMS').val();
+            newElement.find(':input').each(function () {
+                var name = $(this).attr('name').replace('-' + (total - 1) + '-', '-' + total + '-');
+                var id = 'id_' + name;
+                $(this).attr({'name': name, 'id': id}).val('').removeAttr('checked');
+            });
+            newElement.find('label').each(function () {
+                var newFor = $(this).attr('for').replace('-' + (total - 1) + '-', '-' + total + '-');
+                $(this).attr('for', newFor);
+            });
+            total++;
+            $('#id_' + type + '-TOTAL_FORMS').val(total);
+            $(selector).after(newElement);
+        }
+    </script>
 {% endblock %}
 

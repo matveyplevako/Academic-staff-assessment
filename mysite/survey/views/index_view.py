@@ -8,7 +8,7 @@ from survey.models import Survey
 
 
 class IndexView(LoginRequiredMixin, TemplateView):
-    template_name = "list.html"
+    template_name = "survey_list.html"
 
     def get_context_data(self, **kwargs):
         # TODO: select course for user to participate in survey

@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block body %}
+    <div class="h-100 mt-5 row align-items-center">
+        <div class="col border border-light">
+            <h5 class="font-weight-bold text-center mt-3">Survey List</h5>
+            <hr>
+            <nav class="nav flex-column">
+                {% if surveys.all %}
+                    {% for survey in surveys %}
+                        <div class="survey-head mb-2 row text-left border-bottom border-light">
+                            <div class="col">
+                                <p><span class="font-weight-bold">{{ survey.name }}</span></p>
+                                <p>{{ survey.description|truncatewords_html:10|linebreaks }}
+                                </p>
+                            </div>
+                            <div class="col text-right">
+                                <a class="btn btn-primary" href="{{ survey.get_absolute_url }}">Answer
+                                </a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <h5 class="font-weight-bold text-center mt-3">There are no active surveys now, please come back
+                        later</h5>
+                {% endif %}
+
+                {% if perms.survey.add_survey %}
+                    <div class="survey-head mb-2 row text-left">
+                        <a class="nav-link" href="{% url "survey:survey_create" %}">Create a new survey</a>
+                    </div>
+                {% endif %}
+            </nav>
+        </div>
+    </div>
+{% endblock %}
+
+
+
+
+

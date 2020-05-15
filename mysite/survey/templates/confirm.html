@@ -4,18 +4,23 @@
 {% block title %}{% trans "Survey submitted" %}{% endblock title %}
 
 {% block body %}
-    <h1>{% trans "Survey submitted" %}</h1>
-    <p>
-    <div class="alert alert-success">
-        {% trans "Thanks! Your answers have been saved" %}
-    </div>
-    {% if response.survey.editable_answers %}
-        <div class="alert alert-info">
-            {% trans "You can always come back and change them." %}
+    <div class="h-100 row align-items-center"><!--div for survey name and description-->
+        <div class="col">
+            <h3 class="font-weight-bold text-center mt-3">Thanks! Your answers have been saved!</h3>
+            <hr>
+            <div class="survey-head text-center">
+                <p><span class="font-weight-bold">You can come back anytime and change them!</span>
+                </p>
+            </div>
         </div>
-    {% endif %}
+    </div>
+
     <div class="container">
-        <a href="{% url 'survey:survey-list' %}">{% trans "Back to survey list" %} {{ survey.name }}</a>
+        <div class="row">
+            <div class="col text-center">
+                <a class="btn btn-outline-primary waves-effect" href="{% url 'survey:survey-list' %}">Go back</a>
+            </div>
+        </div>
     </div>
 
 {% endblock %}

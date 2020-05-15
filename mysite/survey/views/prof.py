@@ -45,7 +45,7 @@ class OwnerEditMixin:
 class OwnerSurveyEditMixin(OwnerSurveyMixin, OwnerEditMixin):
     # fields = ['subject', 'title', 'slug', 'overview']
     success_url = reverse_lazy('survey:manage_survey_list')
-    template_name = 'survey/form.html'
+    template_name = 'survey/edit_survey.html'
 
 
 class SurveyCreateView(PermissionRequiredMixin,

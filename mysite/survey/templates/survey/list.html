@@ -2,31 +2,84 @@
 
 {% block title %}My surveys{% endblock %}
 
-{% block body %}
-    <h1>My surveys</h1>
+{#{% block body %}#}
+<h1>My surveys</h1>
 
-    <div class="module">
-        {% for survey in object_list %}
-            <div class="course-info">
-                <h3>{{ survey.name }}</h3>
-                <a href="{% url "survey:survey_results" survey.id %}" class="btn btn-success">View answers</a>
-                {% if survey.owner.username == 'doe' or user.username != 'doe' %}
-                    <a href="{% url "survey:survey_edit" survey.id %}" class="btn btn-warning">Edit</a>
-                    <a href="{% url "survey:survey_category_update" survey.id %}" class="btn btn-warning">Edit
-                        categories</a>
+<div class="module">
+    {% for survey in object_list %}
+        <div class="course-info">
+            <h3>{{ survey.name }}</h3>
+            <a href="{% url "survey:survey_results" survey.id %}" class="btn btn-success">View answers</a>
+            {% if survey.owner.username == 'doe' or user.username != 'doe' %}
+                <a href="{% url "survey:survey_edit" survey.id %}" class="btn btn-warning">Edit</a>
+                <a href="{% url "survey:survey_category_update" survey.id %}" class="btn btn-warning">Edit
+                    categories</a>
 
-                    {% if survey.categories.count > 0 %}
-                        <a href="{% url "survey:category_question_list" survey.categories.first.id %}"
-                           class="btn btn-info">Manage questions</a>
-                    {% endif %}
+                {% if survey.categories.count > 0 %}
+                    <a href="{% url "survey:category_question_list" survey.categories.first.id %}"
+                       class="btn btn-info">Manage questions</a>
                 {% endif %}
-                <a href="{% url "survey:survey_delete" survey.id %}" class="btn btn-danger">Delete</a>
-            </div>
-            {% empty %}
-            <p>You haven't created any surveys yet.</p>
-        {% endfor %}
-        <p>
-            <a href="{% url "survey:survey_create" %}" class="button">Create new survey</a>
-        </p>
+            {% endif %}
+            <a href="{% url "survey:survey_delete" survey.id %}" class="btn btn-danger">Delete</a>
+        </div>
+        {% empty %}
+        <p>You haven't created any surveys yet.</p>
+    {% endfor %}
+    <p>
+        <a href="{% url "survey:survey_create" %}" class="button">Create new survey</a>
+    </p>
+</div>
+{#{% endblock %}#}
+
+{% block body %}
+
+    <div class="h-100 mt-5 row align-items-center"><!--div for EVERYTHING-->
+        <div class="col border border-light"><!--also div for EVERYTHING-->
+            <h5 class="font-weight-bold text-center mt-3">My Surveys</h5>
+            <hr>
+            <nav class="nav flex-column">
+                {% for survey in object_list %}
+                    <div class="survey-head mb-2 row text-left border-bottom border-light">
+                        <div class="col">
+                            <a class="nav-link text-dark" href="{{ survey.get_absolute_url }}"><span
+                                    class="font-weight-bold">{{ survey.name }}</span></a>
+                        </div>
+                        <div class="col text-right">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"
+                                        aria-haspopup="true" aria-expanded="false">
+                                    Options
+                                </button>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="{% url "survey:survey_results" survey.id %}">View
+                                        Results</a>
+                                    {% if survey.owner.username == 'doe' or user.username != 'doe' %}
+                                        <a class="dropdown-item"
+                                           href="{% url "survey:survey_edit" survey.id %}">Edit</a>
+                                        <a class="dropdown-item"
+                                           href="{% url "survey:survey_category_update" survey.id %}">Edit
+                                            Categories</a>
+                                        {% if survey.categories.count > 0 %}
+                                            <a class="dropdown-item"
+                                               href="{% url "survey:category_question_list" survey.categories.first.id %}">
+                                                Manage Questions</a>
+                                        {% endif %}
+                                    {% endif %}
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item"
+                                       href="{% url "survey:survey_delete" survey.id %}">Delete</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <h5 class="font-weight-bold text-center mt-3">You haven't created any surveys yet.</h5>
+                {% endfor %}
+
+                <div class="survey-head mb-2 row text-left">
+                    <a class="nav-link" href="{% url "survey:survey_create" %}">Create a new survey</a>
+                </div>
+            </nav>
+        </div>
     </div>
 {% endblock %}

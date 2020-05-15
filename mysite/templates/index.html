@@ -2,80 +2,78 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>{% block title %}{% endblock title %}</title>
-    <link rel="icon" href="{% static 'img/favicon.ico' %}"/>
-    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" type="text/css"/>
-    <link rel="stylesheet" type="text/css" href="{% static 'css/custom.css' %}"/>
-    {% block extracss %}{% endblock %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Main Page</title>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
+    <link rel="stylesheet" href={% static 'css/style.css' %}>
+    <link rel="stylesheet" href={% static 'css/custom_css_libs/bootstrap.css' %}>
+    <link rel="stylesheet" href={% static 'css/mdb.min.css' %}>
 </head>
 <body>
-<nav class="navbar navbar-default navbar-static-top">
-    <div class="container">
-        <a class="navbar-brand" href={% url "home" %}>Anonymous feedback</a>
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
-                    aria-expanded="false" aria-controls="navbar">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-        </div>
-        <div id="navbar" class="navbar-collapse collapse" aria-expanded="false" style="height: 1px;">
-            <ul class="nav navbar-nav navbar-left">
-                <li><a href="{% url "survey:survey-list" %}">Survey list</a></li>
-                {% if perms.survey.add_survey %}
-                    <li><a href="{% url "survey:manage_survey_list" %}">Manage surveys</a></li>
-                {% endif %}
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-                {% if request.user.is_authenticated %}
-                    <li><a href="{% url "home" %}">{{ user.username }}</a></li>
-                    <li><a href="{% url "logout" %}">Sign out</a></li>
-                {% else %}
-                    <li><a href="{% url "login" %}">Sign in</a></li>
-                    <li><a href="{% url "student_registration" %}">Sign up</a></li>
-                {% endif %}
-            </ul>
-        </div>
-    </div>
-</nav>
-<div class="container" id="wrap">
-    <div class="well" id="container-main">
-        <h2 class="row container">Welcome to the anonymous feedback app</h2>
-        <div class="list-group">
-            <a class="list-group-item"
-               href="{% url "survey:survey-list" %}">
-                <h4 class="list-group-item-heading">Survey app page</h4>
-            </a>
-        </div>
-        {% if perms.survey.add_survey %}
-            <div class="list-group">
-                <a class="list-group-item"
-                   href="{% url "survey:manage_survey_list" %}">
-                    <h4 class="list-group-item-heading">Manage surveys</h4>
-                </a>
-            </div>
-        {% endif %}
 
+
+<nav class="navbar navbar-dark bg-primary">
+    <a class="navbar-brand" href="{% url "home" %}">Staff Assessment</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText"
+            aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation"><span
+            class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarText">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active"><a class="nav-link" href="{% url "home" %}">Home<span
+                    class="sr-only">(current)</span></a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url "survey:survey-list" %}">Survey list</a></li>
+            {% if perms.survey.add_survey %}
+                <li class="nav-item"><a class="nav-link" href="{% url "survey:manage_survey_list" %}">Manage surveys</a>
+                </li>
+            {% endif %}
+
+            {% if request.user.is_authenticated %}
+                <li class="nav-item"><a class="nav-link" href="{% url "home" %}">{{ user.username }}</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url "logout" %}">Log Out</a></li>
+            {% else %}
+                <li class="nav-item"><a class="nav-link" href="{% url "login" %}">Sign in</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url "student_registration" %}">Sign up</a></li>
+            {% endif %}
+        </ul>
+    </div>
+</nav> <!--End of navigation bar.-->
+
+
+<div class="container mt-5"><!--Container for everything after navigation bar-->
+    <div class="h-100 row align-items-center"><!--div for survey name and description-->
+        <div class="col">
+            <h3 class="font-weight-bold text-center mt-3">Welcome to the Staff Assessment app.</h3>
+        </div>
+    </div>
+    <div class="h-100 mt-5 row align-items-center"><!--div for EVERYTHING-->
+        <div class="col border border-light"><!--also div for EVERYTHING-->
+            <h5 class="font-weight-bold text-center mt-3">Menu</h5>
+            <hr>
+            <nav class="nav flex-column">
+                <div class="survey-head mb-2 text-center border border-light">
+                    <a class="nav-link active text-dark" href="{% url "survey:survey-list" %}">Survey List</a>
+                </div>
+                {% if perms.survey.add_survey %}
+                    <div class="survey-head mb-2 text-center border border-light">
+                        <a class="nav-link text-dark" href="{% url "survey:manage_survey_list" %}">Manage Surveys</a>
+                    </div>
+                {% endif %}
+            </nav>
+        </div>
     </div>
 </div>
-<div class="footer">
-    <div class="container">
-        {% block footer %}{% endblock %}
-    </div>
-</div>
+<!-- End your project here-->
+
 <script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
-<script type="text/javascript" src="{% static 'js/jquery-ui.min.js' %}"></script>
-<script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
-<script type="text/javascript" src="{% static 'js/custom.js' %}"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/ 3.3.1/jquery.min.js"></script>
-<script> $(document).ready(function () {
-    {% block domready %}
-    {% endblock %}
-});
+<script type="text/javascript" src="{% static 'js/custom_js/bootstrap.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/mdb.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/popper.min.js' %}"></script>
+
+<script type="text/javascript">
 </script>
 {% block extrajs %}{% endblock %}
 </body>

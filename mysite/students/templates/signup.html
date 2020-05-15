@@ -1,16 +1,68 @@
 {% extends "base.html" %}
+{% load widget_tweaks %}
+
 {% block title %}
     Sign up
 {% endblock %}
-{% block body %}
+{% block body1 %}
     <h1>Sign up </h1>
     <a href="{% url "login" %}">Already have an account?</a>
     <div class="module">
         <p>Enter your details to create an account:</p>
         <form action="" method="post">
-                {{ form.as_p }}
-                {% csrf_token %}
+            {{ form.as_p }}
+            {% csrf_token %}
             <p><input class="btn btn-primary" type="submit" value="Create my account"></p>
         </form>
+    </div>
+{% endblock %}
+
+
+{% block body %}
+    <div class="h-100 mt-5 row align-items-center"><!--div for EVERYTHING-->
+        <div class="col border border-light"><!--also div for EVERYTHING-->
+            <h5 class="font-weight-bold text-center mt-3">Sign Up</h5>
+            <hr>
+            <form action="" method="post">
+                {{ form.non_field_errors }}
+                <div class="form-group">
+                    {{ form.username.errors }}
+                    <label for="{{ form.username.id_for_label }}">Login</label>
+                    {% render_field form.username class+="form-control" placeholder="Enter login" %}
+                    {% if form.username.help_text %}
+                        <small>{{ form.username.help_text|safe }}</small>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.email.errors }}
+                    <label for="{{ form.email.id_for_label }}">Innopolis Email</label>
+                    {% render_field form.email class+="form-control" placeholder="Enter email" %}
+                    {% if form.email.help_text %}
+                        <small>{{ form.email.help_text|safe }}</small>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.password1.errors }}
+                    <label for="{{ form.password1.id_for_label }}">Password</label>
+                    {% render_field form.password1 class+="form-control" placeholder="Password" %}
+                    {% if form.password1.help_text %}
+                        <small>{{ form.password1.help_text|safe }}</small>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.password2.errors }}
+                    <label for="{{ form.password2.id_for_label }}">Password Confirmation</label>
+                    {% render_field form.password2 class+="form-control" placeholder="Password" %}
+                    {% if form.password2.help_text %}
+                        <small>{{ form.password2.help_text|safe }}</small>
+                    {% endif %}
+                </div>
+                <div class="form-check">
+                    <a class="link" href="{% url "login" %}">Already have an account?</a>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+                {% csrf_token %}
+            </form>
+        </div>
     </div>
 {% endblock %}

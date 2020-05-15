@@ -3,13 +3,28 @@
 {% block title %}Delete survey{% endblock %}
 
 {% block body %}
-  <h1>Delete survey "{{ object.name }}"</h1>
-
-  <div class="module">
-    <form action="" method="post">
-      {% csrf_token %}
-      <p>Are you sure you want to delete "{{ object }}"?</p>
-      <input type="submit" class="button" value="Confirm">
-    </form>
-  </div>
+    <div class="h-100 row align-items-center"><!--div for survey name and description-->
+        <div class="col">
+            <h3 class="font-weight-bold text-center mt-3">Are you sure you want to delete "{{ object.name }}"
+                survey?</h3>
+            <hr>
+            <div class="survey-head text-center">
+                <p>
+                    <span class="font-weight-bold">You will not be able to get it back later...</span>
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col text-center">
+                <form action="" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary waves-effect waves-light">Delete</button>
+                    <a type="button" class="btn btn-outline-primary waves-effect" data-dismiss="modal"
+                       href="{% url "survey:manage_survey_list" %}">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
 {% endblock %}

@@ -4,5 +4,16 @@
 {% endblock %}
 
 {% block body %}
-    <h1>Please check your innopolis address to complete the registration</h1>
+
+    <div class="h-100 row align-items-center"><!--div for survey name and description-->
+        <div class="col">
+            <h3 class="font-weight-bold text-center mt-3">Check you Innopolis mail to complete registration!</h3>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col text-center">
+            <a class="btn btn-outline-primary waves-effect" href="{% url "survey:survey-list" %}">Go back</a>
+        </div>
+    </div>
 {% endblock %}

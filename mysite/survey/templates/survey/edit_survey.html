@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+
+{% block title %}
+    {% if object %}
+        Edit survey
+    {% else %}
+        New survey
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+    <div class="h-100 mt-5 row align-items-center"><!--div for EVERYTHING-->
+        <div class="col border border-light"><!--also div for EVERYTHING-->
+            {% if object %}
+                <h5 class="font-weight-bold text-center mt-3">Edit Survey "{{ object.name }}"</h5>
+            {% else %}
+                <h5 class="font-weight-bold text-center mt-3">Create a new survey</h5>
+            {% endif %}
+            <hr>
+            <form action="." method="post">
+                {% for field in form %}
+                    <div class="form-group">
+                        {{ field.errors }}
+                        {{ field.label }}
+                        {% if field.name == "description" %}
+                            {% render_field field class+="form-control" rows="3" %}
+                        {% else %}
+                            {% render_field field class+="form-control" %}
+                        {% endif %}
+
+                    </div>
+                {% endfor %}
+                <div class="row">
+                    <div class="col">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                    <div class="col text-right">
+                        <a class="btn btn-light" href="{% url "survey:manage_survey_list" %}">
+                            Cancel
+                        </a>
+                    </div>
+                </div>
+            {% csrf_token %}
+            </form>
+        </div>
+
+    </div>
+{% endblock %}

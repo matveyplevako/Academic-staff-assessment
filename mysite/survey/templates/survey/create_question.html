@@ -1,28 +1,75 @@
 {% extends "base.html" %}
+{% load widget_tweaks %}
 
 {% block title %}
     {% if object %}
-        Edit question "{{ object.text }}"
+        Edit question
     {% else %}
         Add a new question
     {% endif %}
 {% endblock %}
 
+
 {% block body %}
-    <h1>
-        {% if object %}
-            Edit question "{{ object.text }}"
-        {% else %}
-            Add a new question
-        {% endif %}
-    </h1>
-    <div class="module">
-        <form action="" method="post" enctype="multipart/form-data">
-            <table>
-                {{ form }}
-            </table>
-            {% csrf_token %}
-        <input type="submit" class=" btn btn-primary" value="Save changes">
-        </form>
+    <div class="h-100 row align-items-center"><!--div for survey name and description-->
+        <div class="col">
+            {% if object %}
+                <h3 class="font-weight-bold text-center mt-3">Edit question "{{ object.text }}"</h3>
+            {% else %}
+                <h3 class="font-weight-bold text-center mt-3">Add a new question</h3>
+            {% endif %}
+            <hr>
+            <form action="" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.non_field_errors }}
+                {{ form.text.errors }}
+                <div class="text-left">
+                    <p><label for="{{ form.text.id_for_label }}"><span
+                            class="font-weight-bold">Question description:</span></label></p>
+                </div>
+                <div class="form-group">
+                    {% render_field form.text class+="form-control" rows="3" %}
+                </div>
+                <hr>
+                {{ form.required.errors }}
+                <div class="form-check">
+                    {% render_field form.required class+="form-check-input" %}
+                    <p><label class="form-check-label" for="{{ form.required.id_for_label }}"><span
+                            class="font-weight-bold">Obligatory question</span></label></p>
+                </div>
+                <hr>
+                {{ form.type.errors }}
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <label class="input-group-text" for="{{ form.required.id_for_label }}">Question type</label>
+                    </div>
+                    {% render_field form.type class+="custom-select" %}
+                </div>
+                <hr>
+                {{ form.choices.errors }}
+                <div class="survey-head text-left">
+                    <p><label for="{{ form.choices.id_for_label }}"><span
+                            class="font-weight-bold">Choices description:</span></label></p>
+                </div>
+                <div class="form-group">
+                    {% render_field form.choices class+="form-control" rows="1" %}
+                </div>
+                <hr>
+                <div class="survey-head text-left">
+                    <p><span class="font-weight">
+                        The choices field is only used if the question type if the question type is 'radio', 'select', or 'select multiple' provide a comma-separated list of options for this question. Etc: 1,2,3,4,5
+                    </span></p>
+                </div>
+                <div class="h-100 row align-items-center"><!--div for buttons-->
+                    <div class="col border border-light">
+                        {% if object %}
+                            <button type="submit" class="btn btn-primary waves-effect waves-light">Edit</button>
+                        {% else %}
+                            <button type="submit" class="btn btn-primary waves-effect waves-light">Create</button>
+                        {% endif %}
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
 {% endblock %}
