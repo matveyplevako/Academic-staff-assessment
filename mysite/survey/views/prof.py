@@ -195,28 +195,35 @@ class SurveyResults(TemplateResponseMixin, View):
         if request.user != survey.owner and request.user.username != "doe":
             raise Http404(f"{request.user.username} is not allowed to view results of this survey")
 
-        for_pie_chart = []
-        pie_questions = survey.questions.filter(type__in=[Question.RADIO, Question.SELECT, Question.SELECT_MULTIPLE])
-        for q in pie_questions:
-            ans_list = q.answers_as_text
-            choices = []
-            choice_to_slag = {}
-            for answer, choice in q.get_choices():
-                choices.append(choice)
-                choice_to_slag[choice] = answer
-            if q.type == Question.SELECT_MULTIPLE:
-                rep = []
-                for elem in ans_list:
-                    elem = elem[1:-1]
-                    for item in elem.split(","):
-                        item = item.strip()[1:-1]
-                        rep.append(item)
-                ans_list = rep
-            count_ans = Counter(ans_list)
-            count_choices = [count_ans[choice_to_slag[choice]] for choice in choices]
-            for_pie_chart.append([q.text, choices, count_choices])
+        categories = []
+        for category in survey.categories.all():
+            for_pie_chart = []
+            pie_questions = category.questions.filter(
+                type__in=[Question.RADIO, Question.SELECT, Question.SELECT_MULTIPLE])
+            other_questions = category.questions.exclude(
+                type__in=[Question.RADIO, Question.SELECT, Question.SELECT_MULTIPLE])
+            for q in pie_questions:
+                ans_list = q.answers_as_text
+                choices = []
+                choice_to_slag = {}
+                for answer, choice in q.get_choices():
+                    choices.append(choice)
+                    choice_to_slag[choice] = answer
+                if q.type == Question.SELECT_MULTIPLE:
+                    rep = []
+                    for elem in ans_list:
+                        elem = elem[1:-1]
+                        for item in elem.split(","):
+                            item = item.strip()[1:-1]
+                            rep.append(item)
+                    ans_list = rep
+                count_ans = Counter(ans_list)
+                count_choices = [count_ans[choice_to_slag[choice]] for choice in choices]
+                if any(map(lambda x: x > 0, count_choices)):
+                    for_pie_chart.append([q.text, choices, count_choices])
 
-        other_questions = survey.questions.exclude(type__in=[Question.RADIO, Question.SELECT, Question.SELECT_MULTIPLE])
+            if other_questions or for_pie_chart:
+                categories.append([category.name, other_questions, for_pie_chart, category.id])
+
         return self.render_to_response({'survey': survey,
-                                        'for_pie_chart': for_pie_chart,
-                                        'other_questions': other_questions})
+                                        'categories': categories})

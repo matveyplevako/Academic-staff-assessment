@@ -3,22 +3,20 @@
 
 {% block body %}
 
-    <div class="w-75 p-3 text-center" id="center_div">
+{#    <div class="w-75 p-3 text-center">#}
         <h1 class="text-center title">Survey "{{ survey.name }}" results</h1>
-        {% if for_pie_chart %}
-            <h5 class="text-center">Answers for questions with select field</h5>
-        {% endif %}
-    </div>
+{#    </div>#}
 
-    {% if other_questions %}
-        <h5 class="text-center">Answers for questions with input field</h5>
-    {% endif %}
 
-    <div class="d-flex justify-content-center">
-        <div class="text-center">
-            {% for question in other_questions %}
-                {% if question.answers_as_text %}
-                    <div class="card" style="width: 18rem;">
+
+    {% for category in categories %}
+        <div class="h-100 mt-5 row align-items-center"><!--div for EVERYTHING-->
+            <div class="col border border-light" id="accordion"><!--also div for EVERYTHING-->
+                <h5 class="font-weight-bold text-center mt-3">{{ category.0 }}</h5>
+                <hr>
+                <div id="category{{ category.3 }}"></div>
+                {% for question in category.1 %}
+                    <div class="card" style="">
                         <div class="card-header">
                             {{ question.text }}
                         </div>
@@ -30,22 +28,26 @@
                             {% endfor %}
                         </ul>
                     </div>
-                {% endif %}
-            {% endfor %}
+                    <hr>
+                {% endfor %}
+            </div>
         </div>
-    </div>
+    {% endfor %}
 {% endblock body %}
 
 
 {% block extrajs %}
     <script type="text/javascript">
         var survey = [
-            {% for data in for_pie_chart %}
-                {
-                    txt: "{{ data.0 }}",
-                    answers: [{% for answer in data.1 %} "{{ answer }}", {% endfor %}],
-                    values: [{% for value in data.2 %} {{ value }}, {% endfor %}],
-                },
+            {% for category in categories %}
+                {% for data in category.2 %}
+                    {
+                        txt: "{{ data.0 }}",
+                        answers: [{% for answer in data.1 %} "{{ answer }}", {% endfor %}],
+                        values: [{% for value in data.2 %} {{ value }}, {% endfor %}],
+                        category_id: "category{{ category.3 }}",
+                    },
+                {% endfor %}
             {% endfor %}
         ];
         var profEvaluation = {
@@ -101,9 +103,9 @@
             var cnvs = document.createElement('canvas');
             cnvs.id = "labelChart" + i.toString(10);
             dv.appendChild(cnvs);
-            var main_div = document.getElementById("center_div");
+            var main_div = document.getElementById(element.category_id);
             main_div.appendChild(dv);
-            {#main_div.appendChild(cnvs);#}
+            main_div.appendChild(document.createElement('hr'));
             var ctxP = document.getElementById("labelChart" + i.toString(10)).getContext('2d');
             var myPieChart = new Chart(ctxP, {
                 plugins: [ChartDataLabels],
