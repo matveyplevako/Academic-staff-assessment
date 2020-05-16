@@ -198,8 +198,12 @@ class SurveyResults(TemplateResponseMixin, View):
         for_pie_chart = []
         pie_questions = survey.questions.filter(type__in=[Question.RADIO, Question.SELECT, Question.SELECT_MULTIPLE])
         for q in pie_questions:
-            choices = q.choices.split(",")
             ans_list = q.answers_as_text
+            choices = []
+            choice_to_slag = {}
+            for answer, choice in q.get_choices():
+                choices.append(choice)
+                choice_to_slag[choice] = answer
             if q.type == Question.SELECT_MULTIPLE:
                 rep = []
                 for elem in ans_list:
@@ -208,9 +212,8 @@ class SurveyResults(TemplateResponseMixin, View):
                         item = item.strip()[1:-1]
                         rep.append(item)
                 ans_list = rep
-            ans_list = list(map(lambda x: x.lower(), ans_list))
             count_ans = Counter(ans_list)
-            count_choices = [count_ans[choice.lower()] for choice in choices]
+            count_choices = [count_ans[choice_to_slag[choice]] for choice in choices]
             for_pie_chart.append([q.text, choices, count_choices])
 
         other_questions = survey.questions.exclude(type__in=[Question.RADIO, Question.SELECT, Question.SELECT_MULTIPLE])

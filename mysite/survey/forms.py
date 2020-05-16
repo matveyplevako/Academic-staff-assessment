@@ -216,8 +216,21 @@ class ResponseForm(models.ModelForm):
             field.widget.attrs["category"] = question.category.name
         else:
             field.widget.attrs["category"] = ""
-        if question.type == Question.DATE:
+        if question.type == Question.RADIO:
+            field.widget.attrs['class'] = 'form-check-input'
+        elif question.type == Question.DATE:
             field.widget.attrs["class"] = "date"
+        elif question.type == Question.TEXT:
+            field.widget.attrs["class"] = "form-control"
+            field.widget.attrs["placeholder"] = "Type your answer here"
+            field.widget.attrs["rows"] = "4"
+        elif question.type == Question.SHORT_TEXT:
+            field.widget.attrs["class"] = "form-control"
+            field.widget.attrs["placeholder"] = "Type your answer here"
+        elif question.type in [Question.FLOAT, Question.INTEGER]:
+            field.widget.attrs["class"] = "form-control"
+            field.widget.attrs["placeholder"] = "Type number here"
+
         # logging.debug("Field for %s : %s", question, field.__dict__)
         self.fields["question_%d" % question.pk] = field
 

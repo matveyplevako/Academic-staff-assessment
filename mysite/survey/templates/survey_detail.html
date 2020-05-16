@@ -2,6 +2,7 @@
 {% load i18n %}
 {% load survey_extras %}
 {% load static %}
+{% load widget_tweaks %}
 
 {% block title %} {{ survey.name }} {% endblock title %}
 
@@ -21,59 +22,104 @@
 
 
 
+
 {% block body %}
-    <h1> {{ survey.name }} </h1>
-    <div class="survey-description"> {{ survey.description|safe }} </div>
-    <div>
-        {% if step and step != 0 %}
-            <form action="{% url 'survey:survey-detail-step' id=survey.id step=step %}" method="post">
-        {% else %}
-            <form action="{% url 'survey:survey-detail' id=survey.id %}" method="post">
-        {% endif %}
-        {% csrf_token %}
+    <div class="h-100 row align-items-center"><!--div for survey name and description-->
+        <div class="col">
+            <h3 class="font-weight-bold text-center mt-3">Survey "{{ survey.name }}"</h3>
+            <hr>
+            <div class="survey-head text-center">
+                <p><span class="font-weight-bold">{{ survey.description|safe }}</span>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <form action="{% url 'survey:survey-detail' id=survey.id %}" method="post">
         {% for category in categories %}
-            <h3> {{ category }} </h3>
-            <p> {{ category.description }} </p>
-            <div class="panel-group" id="accordion">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title"><a
-                            data-toggle="collapse"
-                            data-parent="#accordion"
-                            href="#collapse{{ category.slugify }}">
-                        {% trans "Answer this part" %}
-                    </a></h3>
-                </div>
-                <div class="category-container">
+
+            <div class="h-100 mt-5 row align-items-center"><!--div for EVERYTHING-->
+                <div class="col border border-light" id="accordion"><!--also div for EVERYTHING-->
+                    <a data-toggle="collapse"
+                       data-parent="#accordion"
+                       href="#collapse{{ category.slugify }}">
+                        <h5 class="font-weight-bold text-center mt-3">{{ category }}</h5>
+                    </a>
+
+                    {% if category.description %}
+                        <div class="text-center">
+                            <p><span class="font-weight">{{ category.description|safe }}</span>
+                            </p>
+                        </div>
+                    {% endif %}
+
                     <div id="collapse{{ category.slugify }}"
                          class="panel-collapse collapse {% if not survey.editable_answers and response_form.response is not None %}in{% endif %}
 				        {{ response_form|collapse_form:category }}">
                         <div class="panel-body">
-                            {% include "question.html" %}
+
+                            {% for form in response_form %}
+                                {% if form.field.widget.attrs.category == category.name or not form.field.widget.attrs.category %}
+                                    <tr class="{% if form.errors %} danger {% endif %}">
+                                        <hr>
+                                        <div class="survey-head text-center">
+                                            <p>{{ form.label|safe }}</p>
+                                        </div>
+                                        <hr>
+                                        {% if form.field.required %}
+                                            <span class="glyphicon glyphicon-asterisk" style="color:red"> </span>
+                                        {% endif %}
+                                        <span class="help-inline" style="color:red">
+	                            <strong> {% for error in  form.errors %}{{ error }}{% endfor %} </strong>
+	                            </span> <br>
+                                        {% if form.field.widget.input_type == 'select' %}
+                                            <select class="browser-default custom-select" name="{{ form.name }}"
+                                                    {% if form.field.widget.attrs.disabled %}
+                                                    disabled{% endif %}>
+                                        {% endif %}
+                                        {% for field in form %}
+                                            {% if form.field.widget.input_type == 'radio' %}
+                                                <div class="form-check mb-3">
+                                                    {{ field }}
+                                                </div>
+                                            {% elif form.field.widget.input_type == 'checkbox' %}
+                                                <div class="form-checkbox mb-1">
+                                                    {{ field }}
+                                                </div>
+                                            {% else %}
+                                                {{ field }}
+                                            {% endif %}
+                                        {% endfor %}
+                                        {% if form.field.widget.input_type == 'select' %}
+                                            </select>
+                                        {% endif %}
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                            <hr>
                         </div>
                     </div>
                 </div>
             </div>
-            {% empty %}
-            <h3> {% trans "Questions" %} </h3>
-            {% include "question.html" %}
+
         {% endfor %}
-        <br>
-        <a class="btn btn-default btn-lg" href="{% url 'survey:survey-list' %}">{% trans "Back to survey list" %}</a>
-        <br>
-        {% if survey.editable_answers %}
-            <p>You can edit answers later</p>
-        {% elif response_form.response is None %}
-            <p>You wont be able to edit answers later</p>
-        {% endif %}
-        {% if survey.editable_answers or response_form.response is None %}
-            <input
-                    class="btn btn-default btn-lg"
-                    type="submit"
-                    value="{% trans "I'm done!" %}"
-            >
-        {% endif %}
-        </form>
-        </form>
-    </div>
+        <div class="h-100 row align-items-center"><!--div for buttons-->
+            <div class="col border border-light">
+                {% if survey.editable_answers %}
+                    <p>You can edit answers later</p>
+                {% elif response_form.response is None %}
+                    <p>You wont be able to edit answers later</p>
+                {% endif %}
+                <button type="submit" class="btn btn-primary waves-effect waves-light">Send
+                </button>
+
+                <a class="btn btn-outline-primary waves-effect float-right"
+                   data-dismiss="modal" href="{% url 'survey:survey-list' %}">Cancel</a>
+            </div>
+            {% csrf_token %}
+        </div>
+    </form>
+
+
+
 {% endblock %}

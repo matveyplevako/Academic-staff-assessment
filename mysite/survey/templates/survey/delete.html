@@ -21,7 +21,7 @@
                 <form action="" method="post">
                     {% csrf_token %}
                     <button type="submit" class="btn btn-primary waves-effect waves-light">Delete</button>
-                    <a type="button" class="btn btn-outline-primary waves-effect" data-dismiss="modal"
+                    <a class="btn btn-outline-primary waves-effect"
                        href="{% url "survey:manage_survey_list" %}">Cancel</a>
                 </form>
             </div>
