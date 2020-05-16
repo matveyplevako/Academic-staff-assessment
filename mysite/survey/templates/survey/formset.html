@@ -17,8 +17,8 @@
                     {% for form in formset.forms %}
                         {{ form.non_field_errors }}
                         {{ form.errors }}
-                        <div class="col mt-2 border-bottom border-light">
-                            <div class='table'>
+                        <div class='table'>
+                            <div class="col mt-2 border-bottom border-light">
                                 <table class='no_error'>
                                     {% for field in form %}
                                         {% if not field.is_hidden %}
@@ -39,6 +39,8 @@
                 <div class="col">
                     <input type="button" class="btn btn-primary" value="Add Category" id="add_more">
                 </div>
+                <hr>
+
                 <div class="col">
                     <input type="submit" class="btn btn-outline-primary waves-effect" value="Save changes">
                 </div>
@@ -60,7 +62,7 @@
                     </div>
                 </div>
             </form>
-
+            <br>
             <a href="{% url "survey:manage_survey_list" %}" class="btn btn-light">Cancel</a>
         </div>
     </div>
