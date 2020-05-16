@@ -1,0 +1,3 @@
+to use pgfplots type
+export TEXINPUTS=pgfplots/tex//:
+in this directory
