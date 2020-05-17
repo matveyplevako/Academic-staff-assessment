@@ -1,3 +1,3 @@
-to use pgfplots type
-export TEXINPUTS=pgfplots/tex//:
-in this directory
+download pgfplots in this dir
+download placeins.sty in this dir
+in this directory export TEXINPUTS=pgfplots/tex//:
