@@ -47,6 +47,11 @@ def activate(request, uidb64, token):
         user.is_active = True
         user.save()
         login(request, user)
-        return render(request, 'activated.html')
+        return render(request, 'activated.html',
+                      context={"message": "Thank you for your email confirmation. Now you can login your account.",
+                               "link": "/"})
+    elif user.is_active:
+        return render(request, 'activated.html',
+                      context={"message": "You have already activated your account."})
     else:
         return HttpResponse('Activation link is invalid!')

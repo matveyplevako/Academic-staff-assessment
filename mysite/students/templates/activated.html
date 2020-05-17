@@ -6,14 +6,18 @@
 
 
 {% block body %}
-    <h1>Thank you for your email confirmation. Now you can login your account.</h1>
-    <h3>You will be redirected to the main page</h3>
+    <h1>{{ message }}</h1>
+    <h3>You will be redirected soon</h3>
 {% endblock %}
 
 {% block extrajs %}
     <script type="text/javascript">
         setTimeout(function () {
-            window.location.href = "/";
+            {% if link %}
+                window.location.href = "{{ link }}";
+            {% else %}
+                window.location.href = "{% url 'login' %}";
+            {% endif %}
         }, 5000);
     </script>
 {% endblock %}
