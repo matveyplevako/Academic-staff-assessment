@@ -43,8 +43,12 @@ INSTALLED_APPS = [
     'widget_tweaks',
 ]
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_URL = '/static/'
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -123,7 +127,6 @@ TEX_DIRECTORY = "tex"
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
-STATIC_URL = '/static/'
 
 EMAIL_HOST = env.get('SMTP_HOST')
 EMAIL_HOST_USER = env.get('SMTP_EMAIL')
